@@ -1,0 +1,23 @@
+[
+    {
+        "id": 1,
+        "members": 5,
+        "price": "$5",
+        "packageType": "Basic Package",
+        "package": "5 Members for $5"
+    },
+    {
+        "id": 2,
+        "members": 10,
+        "price": "$8",
+        "packageType": "Standard Package",
+        "package": "10 Members for $8"
+    },
+    {
+        "id": 3,
+        "members": 20,
+        "price": "$15",
+        "packageType": "Premium Package",
+        "package": "20 Members for $15"
+    }
+]
