@@ -1,14 +1,16 @@
-import { useContext } from "react";
+import { useContext, useRef } from "react";
 import { AuthContext } from "../../../Provider/Provider";
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import Swal from "sweetalert2";
 import { PieChart, Pie, Sector, Cell, ResponsiveContainer, Legend } from 'recharts';
 import { Helmet } from "react-helmet-async";
+import emailjs from '@emailjs/browser';
 
 const AdminHome = () => {
     const axiosSecure = useAxiosSecure();
     const { user } = useContext(AuthContext);
+    const form = useRef();
 
     const COLORS = ['#0088FE', '#00C49F'];
 
@@ -129,6 +131,19 @@ const AdminHome = () => {
             });
         }
     }
+
+    
+
+    const sendEmail = (e) => {
+      e.preventDefault();
+  
+      emailjs.sendForm('service_gug3opr', 'template_9lfza2b', form.current, '5yQgxZQ-Tsa1lps-i')
+        .then((result) => {
+            console.log(result.text);
+        }, (error) => {
+            console.log(error.text);
+        });
+    };
 
     return (
 
@@ -414,25 +429,25 @@ const AdminHome = () => {
                 <div className=" py-8 space-y-6`">
 
                     <div className=" flex justify-center ">
-                        <form className="w-[600px] md:w-[850px] bg-gray-300 px-6 py-7 space-y-4 ">
+                        <form ref={form} onSubmit={sendEmail} className="w-[600px] md:w-[850px] bg-gray-300 px-6 py-7 space-y-4 ">
 
                             <div className="text-base space-y-2">
                                 <h2>Your Name</h2>
-                                <input className="w-full px-1 py-[5px]" type="text" name="" id="" />
+                                <input className="w-full px-1 py-[5px]" type="text" name="name" id="" />
                             </div>
 
                             <div className="text-base space-y-2">
                                 <h2>Email Address</h2>
-                                <input className="w-full px-1 py-[5px]" type="text" name="" id="" />
+                                <input className="w-full px-1 py-[5px]" type="text" name="email" id="" />
                             </div>
                             <div className="text-base space-y-2">
                                 <h2>Phone No.</h2>
-                                <input className="w-full px-1 py-[5px]" type="text" name="" id="" />
+                                <input className="w-full px-1 py-[5px]" type="text" name="number" id="" />
                             </div>
 
                             <div className="text-base">
                                 <h2>Query</h2>
-                                <textarea className="w-full px-2 py-1" name="" id="" cols="30" rows="10"></textarea>
+                                <textarea className="w-full px-2 py-1" name="query" id="" cols="30" rows="10"></textarea>
                             </div>
                             <div className="text-center"><button className="btn bg-yellow-700 border border-yellow-700 text-white"> Submit</button></div>
                         </form>

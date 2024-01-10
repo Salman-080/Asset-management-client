@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "assignment12-auth-23b9a"
-  }
+    "default": "assetharbor",
+    "assetHarbor": "assetharbor"
+  },
+  "targets": {},
+  "etags": {}
 }
