@@ -5,10 +5,14 @@ import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
+import useAxiosPublic from "../../Hooks/useAxiosPublic";
+const image_hosting_key = import.meta.env.VITE_IMAGE_API;
+const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`
 
 const AssetUpdate = () => {
     const { user } = useContext(AuthContext);
     const axiosSecure = useAxiosSecure();
+    const axiosPublic=useAxiosPublic();
     const { id } = useParams();
     const { data: UpdatingAsset = {}, refetch } = useQuery({
         queryKey: ['UpdatingAsset', user?.email, id],
@@ -27,28 +31,70 @@ const AssetUpdate = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const updatedAssetDatas= {
-            assetName: e.target.assetName.value,
-            assetImage: e.target.assetImage.value,
-            assetType: e.target.assetType.value,
-            assetQuantity: e.target.assetQuantity.value
-            
+        const imageFile = {
+            image: e.target.assetImage.files[0],
 
         }
+        console.log(imageFile)
+        if (!imageFile.image) {
+            const updatedAssetDatas = {
+                assetName: e.target.assetName.value,
+                // assetImage: e.target.assetImage.value,
+                assetType: e.target.assetType.value,
+                assetQuantity: e.target.assetQuantity.value
 
-        console.log(updatedAssetDatas);
-        const res= await axiosSecure.put(`/updateAsset/${id}`, updatedAssetDatas);
-        console.log(res.data);
 
-        if(res.data?.modifiedCount> 0){
-            Swal.fire({
-                icon: "success",
-                title: "Successful",
-                text: "Asset Successfully Deleted",
-    
+            }
+
+            console.log(updatedAssetDatas);
+            const res = await axiosSecure.put(`/updateAsset/${id}`, updatedAssetDatas);
+            console.log(res.data);
+
+            if (res.data?.modifiedCount > 0) {
+                Swal.fire({
+                    icon: "success",
+                    title: "Successful",
+                    text: "Asset Successfully Updated",
+
+                });
+                refetch();
+            }
+        }
+        else {
+            const resImageHost = await axiosPublic.post(image_hosting_api, imageFile, {
+                headers: {
+                    "content-type": "multipart/form-data"
+                }
             });
-            refetch();
+            console.log(resImageHost)
+
+            if (resImageHost?.data?.success) {
+                const updatedAssetDatas = {
+                    assetName: e.target.assetName.value,
+                    assetImage: resImageHost.data.data.display_url,
+                    assetType: e.target.assetType.value,
+                    assetQuantity: e.target.assetQuantity.value
+
+
+                }
+
+                console.log(updatedAssetDatas);
+                const res = await axiosSecure.put(`/updateAsset/${id}`, updatedAssetDatas);
+                console.log(res.data);
+
+                if (res.data?.modifiedCount > 0) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Successful",
+                        text: "Asset Successfully Deleted",
+
+                    });
+                    refetch();
+                }
+            }
         }
+
+
 
 
 
@@ -66,17 +112,17 @@ const AssetUpdate = () => {
                     </div>
                     <div className="space-y-1">
                         <h2>Asset Image</h2>
-                        <input defaultValue={UpdatingAsset.assetImage} className="w-full px-1 py-1 rounded-md" type="text" name="assetImage" id="" />
+                        <input className="w-full px-1 py-1 rounded-md" type="file" name="assetImage" id="" />
                     </div>
                     <div className="space-y-1">
                         <h2>Asset Type</h2>
-                        <select  name="assetType" className="select select-bordered w-full">
+                        <select name="assetType" className="select select-bordered w-full">
                             <option disabled selected>{UpdatingAsset.assetType}</option>
                             <option>Returnable</option>
                             <option>Non-returnable</option>
                         </select>
                     </div>
-                    <div  className="space-y-1">
+                    <div className="space-y-1">
                         <h2>Asset Quantity</h2>
                         <input defaultValue={UpdatingAsset.assetQuantity} className="w-full px-1 py-1 rounded-md" type="number" name="assetQuantity" id="" required />
                     </div>
