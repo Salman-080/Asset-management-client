@@ -86,7 +86,7 @@ const AssetUpdate = () => {
                     Swal.fire({
                         icon: "success",
                         title: "Successful",
-                        text: "Asset Successfully Deleted",
+                        text: "Asset Successfully Updated",
 
                     });
                     refetch();
