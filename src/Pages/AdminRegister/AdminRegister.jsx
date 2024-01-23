@@ -39,6 +39,7 @@ const AdminRegister = () => {
     const handleRegister = async (e) => {
         e.preventDefault();
         const form = new FormData(e.currentTarget);
+        
         const imageFile = {
             image: e.target.image.files[0],
             

@@ -48,9 +48,11 @@ const MyTeam = () => {
 
     const birthDayRemainingOrNot = (birthDate) => {
         const currentDate = new Date();
-    
+        
         const birthDateObj = new Date(birthDate);
+        
         const birthMonth = birthDateObj.getMonth();
+        
         const birthDay = birthDateObj.getDate();
     
         

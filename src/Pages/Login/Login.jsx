@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Provider/Provider";
 import useIsEmployee from "../../Hooks/useIsEmployee";
@@ -7,9 +7,10 @@ import useAxiosPublic from "../../Hooks/useAxiosPublic";
 
 
 const Login = () => {
-    const { signInUser, googleSignIn } = useContext(AuthContext);
+    const { signInUser, googleSignIn, resetPass } = useContext(AuthContext);
     const [isEmployee, refetch] = useIsEmployee();
-    const axiosPublic= useAxiosPublic();
+    const [resetEmail, setResetEmail] = useState('');
+    const axiosPublic = useAxiosPublic();
 
     const navigate = useNavigate();
     console.log(isEmployee)
@@ -34,28 +35,28 @@ const Login = () => {
             });
     }
 
-    const handleGoogleLogIn=()=>{
+    const handleGoogleLogIn = () => {
         googleSignIn()
-        .then(async(res)=>{
-            console.log(res.user);
-            
-            const employeeInfo= {
-                registerName: res.user?.displayName, 
-                registerEmail: res.user?.email,           
-                registerImage: res.user?.photoURL
-            }
+            .then(async (res) => {
+                console.log(res.user);
 
-            const response= await axiosPublic.post("/employeeInfo", employeeInfo);
-            console.log(response.data);
-            refetch();
-            navigate("/");
-        })
-        .catch(err=>{
-            console.log(err);
-        })
+                const employeeInfo = {
+                    registerName: res.user?.displayName,
+                    registerEmail: res.user?.email,
+                    registerImage: res.user?.photoURL
+                }
+
+                const response = await axiosPublic.post("/employeeInfo", employeeInfo);
+                console.log(response.data);
+                refetch();
+                navigate("/");
+            })
+            .catch(err => {
+                console.log(err);
+            })
     }
 
-     
+    console.log(resetEmail)
     return (
         <div className="flex flex-col justify-center items-center min-h-screen ">
             <Helmet>
@@ -84,7 +85,26 @@ const Login = () => {
                             </label>
                             <input name="password" type="password" placeholder="password" className="input input-bordered" required />
                             <label className="label">
-                                <a href="#" className="label-text-alt link link-hover">Forgot password?</a>
+                                <a onClick={() => document.getElementById('my_modal').showModal()} href="#" className="label-text-alt link link-hover">Forgot password?</a>
+                                <dialog id="my_modal" className="modal">
+                                    <div className="modal-box w-[30%] max-w-5xl">
+                                        <h3 className="font-bold text-lg">Please, Type your email</h3>
+                                        <br />
+                                        <div className="flex space-x-5">
+                                            <input className="input input-bordered" onChange={(e) => setResetEmail(e.target.value)} type="email" />
+
+                                            <button className="btn bg-green-500 text-white" onClick={() => resetPass(resetEmail)}>Submit</button>
+                                        </div>
+
+                                        <div className="modal-action">
+                                            <form method="dialog">
+
+                                                <button className="btn">Close</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </dialog>
+
                             </label>
                         </div>
                         {/* <p>New User? <Link to="/register"><span className="text-blue-600">Register</span></Link></p> */}
@@ -92,6 +112,12 @@ const Login = () => {
                             <button className="btn btn-primary">Login</button>
                         </div>
                     </form>
+
+
+
+
+
+
 
                     <div className="text-center mb-5 space-y-2">
                         <p className="text-gray-500">Or Sign in using</p>
@@ -103,7 +129,7 @@ const Login = () => {
                     </div>
                 </div>
             </div>
-           
+
 
         </div>
     );

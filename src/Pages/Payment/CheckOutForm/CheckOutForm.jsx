@@ -28,11 +28,6 @@ const CheckOutForm = () => {
     const price = packageInfo?.package?.split(" ")[3].split("$")[1];
 
 
-
-
-
-
-    // reload marle
     useEffect(() => {
         if (Object.keys(packageInfo).length === 0 || !packageInfo.package) {
 

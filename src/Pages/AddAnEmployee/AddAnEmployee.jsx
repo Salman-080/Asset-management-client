@@ -129,11 +129,6 @@ const AddAnEmployee = () => {
         if (checkBoxId.length > 0) {
 
             if (checkBoxId.length <= currentPackageLimit) {
-                // alert("now ok");
-                // const idsMembers= user
-                // const info={
-
-                // }
                 const usersMarked = users?.filter(user => checkBoxId.includes(user._id));
                 console.log(usersMarked);
 

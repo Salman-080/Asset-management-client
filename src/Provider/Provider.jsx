@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import app from "../Firebase/firebase.config";
-import { GoogleAuthProvider, createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from "firebase/auth";
+import { GoogleAuthProvider, createUserWithEmailAndPassword, getAuth, onAuthStateChanged, sendPasswordResetEmail, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from "firebase/auth";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 
@@ -42,7 +42,7 @@ const Provider = ({ children }) => {
 
 
     const googleSignIn = () => {
-        
+
         return signInWithPopup(auth, provider);
 
     }
@@ -63,6 +63,21 @@ const Provider = ({ children }) => {
         setLoading(true);
         return signOut(auth);
     }
+
+
+
+    const resetPass = (email) => {
+        console.log(email)
+        sendPasswordResetEmail(auth, email)
+            .then((res) => {
+                alert("please check your email")
+                
+            })
+            .catch((error) => {
+                
+            });
+    }
+
 
 
 
@@ -92,7 +107,8 @@ const Provider = ({ children }) => {
         packageInfo,
         loading,
         setPackageInfo,
-        googleSignIn
+        googleSignIn,
+        resetPass
         // setPackageLoad,
         // packageLoad,
 
